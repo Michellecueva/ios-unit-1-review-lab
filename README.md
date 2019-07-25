@@ -12,7 +12,9 @@ Given the following excerpt from the Declaration of Independence, find the most 
 ```swift
 let declarationOfIndependence =
 
+
 """
+
 When in the Course of human events, it becomes necessary for one people to dissolve the
 political bands which have connected them with another, and to assume among the powers of the
 earth, the separate and equal station to which the Laws of Nature and of Nature's God entitle
@@ -37,6 +39,41 @@ Britain is a history of repeated injuries and usurpations, all having in direct 
 establishment of an absolute Tyranny over these States. To prove this, let Facts be submitted to a
 candid world.
 """
+
+var setOfCharacters = CharacterSet.punctuationCharacters
+
+setOfCharacters.insert(" ")
+
+setOfCharacters.insert("\n")
+
+var wordDict = [String: Int]()
+
+let arrOfDeclaration = declarationOfIndependence.components(separatedBy: setOfCharacters)
+
+for word in arrOfDeclaration where word.count > 5 {
+    if let count = wordDict[word] {
+        wordDict[word] = count + 1
+    } else {
+        wordDict[word] = 1
+    }
+
+}
+
+
+
+let sortedDict = wordDict.sorted{$0.1 > $1.1}
+
+let arrayDict = Array(sortedDict)
+
+print(arrayDict[0].key)
+
+
+
+
+
+
+
+
 ```
 
 ## Question 2
@@ -46,6 +83,33 @@ Make an array that contains all elements that appear more than twice in someRepe
 
 ```swift
 var someRepeatsAgain = [25,11,30,31,50,28,4,37,13,20,24,38,28,14,44,33,7,43,39,35,36,42,1,40,7,14,23,46,21,39,11,42,12,38,41,48,20,23,29,24,50,41,38,23,11,30,50,13,13,16,10,8,3,43,10,20,28,39,24,36,21,13,40,25,37,39,31,4,46,20,38,2,7,11,11,41,45,9,49,31,38,23,41,16,49,29,14,6,6,11,5,39,13,17,43,1,1,15,25]
+
+
+var dictionary = [Int:Int]()
+
+
+for num in someRepeatsAgain {
+    if let count = dictionary[num] {
+        dictionary[num] = count + 1
+    } else {
+        dictionary[num] = 1
+    }
+}
+
+
+
+let sortedDict = dictionary.sorted{$0.1 < $1.1}
+
+
+
+var repeatsAgain = [Int]()
+
+for (key,value) in sortedDict where value > 2 {
+    repeatsAgain.append(key)
+}
+
+print(repeatsAgain)
+
 ```
 
 ## Question 3
@@ -54,6 +118,20 @@ Identify if there are 3 integers in the following array that sum to 10. If so, p
 
 ```swift
 var tripleSumArr = [-20,-14, -8,-5,-3,-2,1,2,3,4,9,15,20,30]
+
+var triplets = [[Int]] ()
+
+for x in tripleSumArr {
+    for y in tripleSumArr where y > x {
+        for z in tripleSumArr where z > y {
+            if x + y + z == 10 {
+                triplets.append([x,y,z])
+            }
+        }
+    }
+}
+
+print(triplets)
 ```
 
 
@@ -93,9 +171,28 @@ let letterValues = [
 a. Sort the string below in descending order according the dictionary letterValues
 var codeString = "aldfjaekwjnfaekjnf"
 
+``` swift
+
+let arrOfString = Array(codeString)
+
+let test = arrOfString.sorted{letterValues[String($0)]! > letterValues[String($1)]!}
+
+print(test)
+
+```
 
 b. Sort the string below in ascending order according the dictionary letterValues
 var codeStringTwo = "znwemnrfewpiqn"
+
+``` swift
+
+let arrOfString = Array(codeStringTwo)
+
+let test = arrOfString.sorted{letterValues[String($0)]! < letterValues[String($1)]!}
+
+print(test)
+
+```
 
 
 ## Question 4
@@ -107,6 +204,16 @@ Given an Array of Arrays of Ints, write a function that returns the Array of Int
 Input: [[2,4,1],[3,0],[9,3]]
 
 Output: [9,3]
+
+
+let input = [[2,4,1],[3,0],[9,3]]
+
+func greatestSum(arr: [[Int]]) -> [Int] {
+    let sortedArr = arr.sorted{$0.reduce(0,+) > $1.reduce(0,+)}
+    return sortedArr[0]
+}
+
+greatestSum(arr: input)
 ```
 
 ## Question 5
@@ -121,13 +228,39 @@ struct ReceiptItem {
   let name: String
   let price: Double
 }
+
+
+func totalCost() -> Double {
+vr priceArr = [Double]()
+
+for item in items {
+priceArr.append(item.price)
+}
+return priceArr.reduce(0, +)
+}
+}
+
+
+func pairReceiptsWithStore(receipt: [Receipt], name: String) -> [Receipt] {
+let returnArr = receipt.filter{($0.storeName == name)}
+return returnArr
+}
+
+func sortedByPrice(ticket: [Receipt]) -> [Receipt] {
+let sortedPrice = ticket.sorted{($0.totalCost() < $1.totalCost())}
+
+return sortedPrice
+}
+
+
+
 ```
 
 a. Given the structs above, add a method to `Receipt` that returns the total cost of all items
 
-b. Write a function that takes in an array of `Receipts` and returns an array of `Receipts` that match a given store name
+b. Write a function that takes in an array of `Receipt` and returns an array of `Receipt` that match a given store name
 
-c. Write a function that takes in an array of `Receipts` and returns an array of those receipts sorted by price
+c. Write a function that takes in an array of `Receipt` and returns an array of those receipts sorted by price
 
 ## Question 6
 
@@ -137,7 +270,7 @@ a. The code below doesn't compile.  Why?  Fix it so that it does compile.
 class Giant {
     var name: String
     var weight: Double
-    let homePlanet: String
+    var homePlanet: String -> properties have to be var to be changed
 
     init(name: String, weight: Double, homePlanet: String) {
         self.name = name
@@ -146,7 +279,7 @@ class Giant {
     }
 }
 
-let fred = Giant(name: "Fred", weight: 340.0, homePlanet: "Earth")
+let fred = Giant(name: "Fred", weight: 340.0, homePlanet: "Earth") - this can be let cuz its a class
 
 fred.name = "Brick"
 fred.weight = 999.2
@@ -160,19 +293,23 @@ let edgar = Giant(name: "Edgar", weight: 520.0, homePlanet: "Earth")
 let jason = edgar
 jason.name = "Jason"
 ```
-
+Same value of "Jason" because it's class
 ## Question 7
 
 ```
 struct BankAccount {
     var owner: String
     var balance: Double
+    var deposits: [Double]
+    var withdraw: [Double]
+    let startingBalance: Double 
+    
 
-    func deposit(_ amount: Double) {
+    mutating func deposit(_ amount: Double) {
         balance += amount
     }
 
-    func withdraw(_ amount: Double) {
+    mutating func withdraw(_ amount: Double) {
         balance -= amount
     }
 }
@@ -192,8 +329,28 @@ e. Add a method called `totalGrowth` that returns a double representing the chan
 
 ```swift
 enum GameOfThronesHouse: String {
-    case stark, lannister, targaryen, baratheon
+case stark, lannister, targaryen, baratheon
+
+func HousewithWords() -> String {
+
+var sent = ""
+switch self {
+case .stark:
+sent = "Winter is coming"
+case .lannister:
+sent = "A Lannister always pays his debts"
+case .baratheon:
+sent = "Ours is the Fury"
+case .targaryen:
+sent = "Fire and Blood"
 }
+return sent
+}
+}
+
+let test3 = GameOfThronesHouse.lannister
+
+test3.HousewithWords()
 ```
 
 a. Write a function that takes an instance of GameOfThronesHouse as input and, using a switch statement, returns the correct house words.
@@ -232,7 +389,9 @@ library1.add(track: "Michelle")
 library1.add(track: "Voodoo Child")
 let library2 = library
 library2.add(track: "Come As You Are")
+
 ```
+same as library 1 because its a class
 
 ## Question 10
 
